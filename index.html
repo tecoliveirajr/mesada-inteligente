@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesada Inteligente</title>
+    
+    <!-- LINHA CORRIGIDA E VALIDADA -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- CDN PÚBLICA E CONFIÁVEL PARA ÍCONES (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <!-- O corpo do HTML permanece o mesmo -->
+    <!-- CABEÇALHO PRINCIPAL -->
+    <header>
+        <div class="header-content">
+            <div class="titulo-app">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <h1>Painel de Tarefas</h1>
+            </div>
+            <div class="saldo-box">
+                <span>Meu Saldo</span>
+                <strong id="saldo-total">0 Pontos</strong>
+            </div>
+        </div>
+        <i id="admin-trigger" class="fa-solid fa-user-shield" title="Painel do Administrador"></i>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL (TELAS ) -->
+    <main>
+        <section id="tela-lancamentos" class="tela ativa">
+            <h2>Minhas Tarefas Recentes</h2>
+            <ul id="lista-lancamentos"></ul>
+        </section>
+
+        <section id="tela-dashboard" class="tela">
+            <h2>Meu Desempenho</h2>
+            <div class="grafico-container">
+                <canvas id="grafico-categorias"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- RODAPÉ DE NAVEGAÇÃO -->
+    <footer>
+        <nav>
+            <button data-tela="lancamentos" class="nav-button ativo"><i class="fa-solid fa-list-check"></i> <span>Tarefas</span></button>
+            <button data-tela="dashboard" class="nav-button"><i class="fa-solid fa-chart-pie"></i> <span>Desempenho</span></button>
+        </nav>
+    </footer>
+
+    <!-- BOTÃO FLUTUANTE PARA ADICIONAR TAREFA -->
+    <button id="btn-adicionar-flutuante" class="fab" title="Registrar Tarefa">+</button>
+
+    <!-- =================================== -->
+    <!--      MODAIS DO APLICATIVO           -->
+    <!-- =================================== -->
+
+    <!-- MODAL PARA ADICIONAR TAREFA (USUÁRIO) -->
+    <div id="modal-adicionar" class="modal-container">
+        <div class="modal-content">
+            <button class="btn-fechar-modal">&times;</button>
+            <h2>Qual missão você cumpriu?</h2>
+            <form id="form-tarefa">
+                <select id="select-tarefa" required>
+                    <option value="" disabled selected>Selecione uma missão...</option>
+                </select>
+                <button type="submit" class="btn-principal">Registrar Conquista</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN DO ADMIN -->
+    <div id="modal-admin-login" class="modal-container">
+        <div class="modal-content">
+            <h2>Acesso Restrito</h2>
+            <form id="form-admin-login">
+                <input type="password" id="admin-password" placeholder="Senha do Administrador" required>
+                <button type="submit" class="btn-principal">Entrar</button>
+                <p id="admin-login-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAINEL PRINCIPAL DO ADMIN -->
+    <div id="painel-admin" class="modal-container">
+        <div class="modal-content">
+            <button class="btn-fechar-modal">&times;</button>
+            <h2>Painel do Administrador</h2>
+
+            <div class="admin-section" id="secao-aprovacao">
+                <h3>Tarefas Pendentes de Aprovação</h3>
+                <div id="lista-aprovacao"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>Ajuste Manual de Pontos</h3>
+                <form id="form-ajuste-pontos">
+                    <input type="number" id="ajuste-pontos-valor" placeholder="Pontos (ex: -50 ou 100)" required>
+                    <input type="text" id="ajuste-pontos-motivo" placeholder="Motivo (ex: Bônus ou Penalidade)" required>
+                    <button type="submit" class="btn-principal">Aplicar Ajuste</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h3>Gerar Relatório PDF</h3>
+                <form id="form-relatorio-pdf">
+                    <div class="date-range-picker">
+                        <div>
+                            <label for="pdf-data-inicio">Data de Início:</label>
+                            <input type="date" id="pdf-data-inicio" required>
+                        </div>
+                        <div>
+                            <label for="pdf-data-fim">Data de Fim:</label>
+                            <input type="date" id="pdf-data-fim" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-principal">Gerar e Baixar PDF</button>
+                </form>
+            </div>
+
+            <div class="admin-section" id="secao-gerenciar-tarefas">
+                <h3>Gerenciar Tarefas Predefinidas</h3>
+                <div id="lista-tarefas-admin"></div>
+                <button id="btn-abrir-modal-nova-tarefa" class="btn-principal">Adicionar Nova Tarefa</button>
+            </div>
+
+            <div class="admin-section danger-zone">
+                <h3>Zona de Perigo</h3>
+                <p>Use com cuidado. Esta ação não pode ser desfeita.</p>
+                <form id="form-exclusao-segura">
+                    <div class="date-range-picker">
+                        <div>
+                            <label for="apagar-data-inicio">Apagar a partir de:</label>
+                            <input type="date" id="apagar-data-inicio" required>
+                        </div>
+                        <div>
+                            <label for="apagar-data-fim">Apagar até:</label>
+                            <input type="date" id="apagar-data-fim" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-perigo">Apagar Dados do Período</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITOR DE TAREFAS (ADMIN) -->
+    <div id="modal-tarefa-editor" class="modal-container">
+        <div class="modal-content">
+            <button class="btn-fechar-modal">&times;</button>
+            <h2 id="editor-titulo">Editar Tarefa</h2>
+            <form id="form-tarefa-editor">
+                <input type="hidden" id="tarefa-id-editor">
+                <label for="tarefa-nome-editor">Nome da Tarefa:</label>
+                <input type="text" id="tarefa-nome-editor" required>
+                <label for="tarefa-categoria-editor">Categoria:</label>
+                <select id="tarefa-categoria-editor" required>
+                    <option value="Educação">Educação</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Comportamental">Comportamental</option>
+                    <option value="Saúde e Bem-estar">Saúde e Bem-estar</option>
+                    <option value="Financeiro">Financeiro</option>
+                </select>
+                <label for="tarefa-pontos-editor">Pontos:</label>
+                <input type="number" id="tarefa-pontos-editor" required>
+                <button type="submit" class="btn-principal">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPTS (SEMPRE NO FINAL) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- LINHA CORRIGIDA E VALIDADA -->
+    <script src="app.js"></script>
+
+</body>
+</html>
