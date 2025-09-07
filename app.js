@@ -7,12 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // =================================================================================
     const ADMIN_PASSWORD = "1234";
     let TAREFAS_PREDEFINIDAS_INICIAL = [
-        { id: 1, nome: "Arrumar a cama", categoria: "Casa", pontos: 10 },
-        { id: 2, nome: "Ler por 20 minutos", categoria: "Educação", pontos: 20 },
-        { id: 3, nome: "Ajudar a por a mesa", categoria: "Casa", pontos: 15 },
-        { id: 4, nome: "Guardar os brinquedos", categoria: "Casa", pontos: 10 },
-        { id: 5, nome: "Fazer o dever de casa", categoria: "Educação", pontos: 30 },
-        { id: 6, nome: "Ser gentil com o irmão/irmã", categoria: "Comportamental", pontos: 25 },
+        { id: 1, nome: "Arrumar a cama", categoria: "Casa", pontos: 1 },
+        { id: 2, nome: "Ajudar a guarda louça - 2º x", categoria: "Casa", pontos: 1 },
+        { id: 3, nome: "Alimentar a CHURY / Retirada do xixi e/ou cocô", categoria: "Casa", pontos: 5 },
+        { id: 4, nome: "Deixar toalha ou roupa fora do lugar", categoria: "Casa", pontos: -3 },
+        { id: 5, nome: "Ser cobrado por escova dente, banhar, pentear", categoria: "Comportamental", pontos: -2 },
+        { id: 6, nome: "Resmungar, teimar, falar alto", categoria: "Comportamental", pontos: -3 },
+        { id: 7, nome: "Falha no comportamneto fora casa", categoria: "Comportamental", pontos: -5 },
+        { id: 8, nome: "Usar mais de uma tela ao mesmo tempo", categoria: "Comportamental", pontos: -6 },
+        { id: 9, nome: "Respeitar o tempo de tela", categoria: "Comportamental", pontos: 7 },
+       { id: 10, nome: "Ler por 30min de forma espontanêa", categoria: "Educação", pontos: 3 },
+       { id: 11, nome: "Ler por 30min e resumo de forma espontanêa", categoria: "Educação", pontos: 5 },
+       { id: 12, nome: "Concluir um curso on line", categoria: "Educação", pontos: 10 },           
+        
     ];
 
     let lancamentos = JSON.parse(localStorage.getItem('mesadaInteligente_lancamentos')) || [];
